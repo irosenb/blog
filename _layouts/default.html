@@ -13,7 +13,9 @@
         <link rel="stylesheet" href="/css/main.css">
 
     </head>
-    <body>
+    <body {% if page.categories != nil %}
+              class="{{ page.categories }}" 
+          {% endif %}>
 
         <div class="container">
           <div class="site">
