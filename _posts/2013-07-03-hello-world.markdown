@@ -4,7 +4,7 @@ layout: post
 date: "2013-07-03 10:56"
 title: "Hello World"
 comments: true
-categories: null
+categories: 
 ---
 
 Hi, I'm Isaac Rosenberg. 
