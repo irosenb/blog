@@ -2,4 +2,3 @@ name: Isaac Rosenberg
 markdown: redcarpet
 pygments: true
 permalink: :title
-auto: true
