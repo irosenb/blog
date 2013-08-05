@@ -20,10 +20,12 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-size: 100%; }
+  font-size: 100%; 
+  color: #232323;
+}
 
 h1 { margin-bottom: 1em; }
-p { margin: 1em 0; }
+p { margin: 1em 0; color: #303030;}
 
 a         { color: #00a; }
 a:hover   { color: #000; }
@@ -34,9 +36,23 @@ a:visited { color: #a0a; }
 /* Home
 /*
 /*****************************************************************************/
+
+h1.title a, h1 {
+  margin: 0;
+  font-family: lato;
+  color: #2f5975 ;
+  text-transform: uppercase;
+}
+
+.home {
+  margin: 0 auto;
+  width: inherit;
+}
+
 ul.posts {
   list-style-type: none;
   margin-bottom: 2em;
+  text-align: center;
 }
 
 ul.posts li {
@@ -57,7 +73,7 @@ ul.posts span {
 
 .site {
   font-size: 115%;
-  text-align: justify;
+  /*text-align: justify;*/
   /*width: 42em;*/
   margin: 3em auto 2em;
   line-height: 1.5em;
@@ -75,7 +91,8 @@ ul.posts span {
 }
 
 .site .header h1.title a {
-  color: #a00;
+  /*color: #a00;*/
+  color: #4d94b3; 
 }
 
 .site .header h1.title a:hover {

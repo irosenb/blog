@@ -3,3 +3,7 @@ markdown: redcarpet
 pygments: true
 permalink: :title
 auto: true
+
+sass:
+    syntax: sass        # scss|sass
+    style:  compressed  # nested|expanded|compact|compressed
