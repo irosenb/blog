@@ -183,6 +183,11 @@ ul.posts span {
   width: 0;
 }
 
+.post-title {
+  font-family: lato;
+  font-weight: 400;
+}
+
 
 /* terminal */
 .post pre.terminal {
