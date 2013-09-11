@@ -1,0 +1,10 @@
+---
+layout: post
+title: "hi"
+date: 2013-09-05 12:01
+categories: 
+---
+
+Hi there! I'm Isaac! 
+
+I just tried this out! SWEEET!!!!!!!
