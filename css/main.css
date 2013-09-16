@@ -139,24 +139,6 @@ ul.posts span {
   color: #4d94b3; 
 }
 
-.header h1.title a:hover {
-  color: #3a7088;
-}
-
-.header h1.title a:active {
-  color: #2f5c6f;
-  outline:none;
-}
-
-.header a.extra {
-  color: #aaa;
-  margin-left: 1em;
-}
-
-.header a.extra:hover {
-  color: #000;
-}
-
 .site .meta {
   color: #aaa;
 }
@@ -241,7 +223,6 @@ ul.posts span {
 }
 
 .post-title {
-  font-family: Merriweather;
   font-weight: 400;
 }
 
@@ -282,12 +263,12 @@ ul.posts span {
   }
 
   .site {
-    width: 80%;
+    width: 70%;
     font-size: 90%;
   }
 
   ul.posts li {
     line-height: 1.25em;
-    font-size: 1em;
+    font-size: 1.3em;
   }
 }
