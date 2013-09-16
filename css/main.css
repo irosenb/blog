@@ -17,7 +17,7 @@ body {
   font: 13.34px Helvetica, Arial, sans-serif;
   font-size: small;
   text-align: center;
-  max-width: 33em;
+  /*max-width: 33em;*/
 
 }
 
@@ -41,16 +41,14 @@ a:visited { color: #a0a; }
 
 h1.title a, h1 {
   margin: 0;
-  font-family: lato;
-  color: #2f5975 ;
+  font-family: lato, sans-serif;
+  color: #2f5975;
   text-transform: uppercase;
 }
 
-h1.title a:
-
-.home {
+.site {
   margin: 0 auto;
-  width: inherit;
+  width: 50%;
 }
 
 ul.posts {
@@ -63,6 +61,19 @@ ul.posts li {
   line-height: 1.75em;
   font-size: 1.333em;
   clear: both;
+  margin-bottom: 1em;
+}
+
+ul.posts li a {
+  font-weight: normal;
+}
+
+ul.posts li:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }
 
 ul.posts:after {
@@ -79,7 +90,6 @@ ul.posts a {
 
 ul.posts span {
   color: #aaa;
-  /*font-family: Monaco, "Courier New", monospace;*/
   font-size: 80%;
   float: right;
 }
@@ -106,37 +116,44 @@ ul.posts span {
   visibility: hidden;
 }
 
-.site .header a {
+.header {
+  background-color: #433;
+}
+
+.header a {
   font-weight: bold;
   text-decoration: none;
 }
 
-.site .header h1.title {
+.header h1 {
+  margin: 0.7em;
+}
+
+.header h1.title {
   display: inline-block;
-  margin-bottom: 2em;
   text-align: left;
 }
 
-.site .header h1.title a {
+.header h1.title a {
   /*color: #a00;*/
   color: #4d94b3; 
 }
 
-.site .header h1.title a:hover {
+.header h1.title a:hover {
   color: #3a7088;
 }
 
-.site .header h1.title a:active {
+.header h1.title a:active {
   color: #2f5c6f;
   outline:none;
 }
 
-.site .header a.extra {
+.header a.extra {
   color: #aaa;
   margin-left: 1em;
 }
 
-.site .header a.extra:hover {
+.header a.extra:hover {
   color: #000;
 }
 
@@ -203,6 +220,10 @@ ul.posts span {
   border: none;
 }
 
+.post .highlight {
+  margin-bottom: 1.5em;
+}
+
 .post img {
   width: 625px;
   height: auto;
@@ -234,4 +255,39 @@ ul.posts span {
 
 .post pre.terminal code {
   background-color: #333;
+}
+
+@media (max-width: 672px) {
+  .header h1 {
+    font-size: 2.13333rem;
+  }
+
+  .site {
+    width: 80%;
+  }
+
+  ul.posts li {
+    line-height: 1.25em;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 525px) {
+  .header h1 {
+    font-size: 1.666667rem;
+  }
+
+  .post-title {
+    font-size: 2rem;
+  }
+
+  .site {
+    width: 80%;
+    font-size: 90%;
+  }
+
+  ul.posts li {
+    line-height: 1.25em;
+    font-size: 1em;
+  }
 }

@@ -12,7 +12,7 @@ I saw Tess Rinearson's [post][1] on getting an internship as a high school stude
 
 > It's not that simple in high school. It can seem like companies don't want high school students, or, if they do, they're hiring just for "cups and coffee"
 
-It's absolutely true, and a lot of people are confused by that. My dad I should prepare to be getting cups of coffee and doing paperwork and whatnot. And sometimes I did do that, but that was quite rare. Most of the time I was working on real things, actually programming. 
+It's absolutely true, and a lot of people are confused by that. My dad said I should prepare to be getting cups of coffee and doing paperwork and whatnot. And sometimes I did do that, but that was quite rare. Most of the time I was working on real things, actually programming. 
 
 And I loved it. 
 
