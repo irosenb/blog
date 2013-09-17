@@ -207,8 +207,10 @@ ul.posts span {
 }
 
 .post img {
-  width: 625px;
+  width: 80%;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .caret {

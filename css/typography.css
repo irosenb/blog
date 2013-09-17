@@ -97,8 +97,6 @@ hr {
     border-top: medium double #333;
     color: #333;
     text-align: center;
-/*    margin-right: auto;
-    margin-left: auto;*/
     width: 50%;
 }
 hr:after {
@@ -108,7 +106,7 @@ hr:after {
     top: -0.7em;  
     font-size: 1.5em;
     padding: 0 0.25em;
-    background: white;
+    background: rgb(253, 253, 253);
     font-family: georgia, serif;
 }
 

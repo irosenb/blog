@@ -1,0 +1,102 @@
+<!-- Generator: GNU source-highlight 3.1.7
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><i><font color="#9A1900"># A Liquid tag for Jekyll sites that allows embedding tweets using Twitter's</font></i>
+<i><font color="#9A1900"># oEmbed API, and showing the tweet as a blockquote for non-JavaScript enabled</font></i>
+<i><font color="#9A1900"># browsers and readers.</font></i>
+<i><font color="#9A1900">#</font></i>
+<i><font color="#9A1900"># Author: Scott W. Bradley</font></i>
+<i><font color="#9A1900"># Source URL: https://github.com/scottwb/jekyll-tweet-tag</font></i>
+<i><font color="#9A1900">#</font></i>
+<i><font color="#9A1900"># Example usage:</font></i>
+<i><font color="#9A1900">#   {% tweet https://twitter.com/DEVOPS_BORAT/status/159849628819402752 %}</font></i>
+<i><font color="#9A1900">#</font></i>
+<i><font color="#9A1900"># Documentation:</font></i>
+<i><font color="#9A1900">#   https://github.com/scottwb/jekyll-tweet-tag/blob/master/README.md</font></i>
+<i><font color="#9A1900">#</font></i>
+<b><font color="#000080">require</font></b> <font color="#FF0000">'json'</font>
+<b><font color="#000080">require</font></b> <font color="#FF0000">'digest/md5'</font>
+<b><font color="#000080">require</font></b> <font color="#FF0000">'net/http'</font>
+
+<b><font color="#0000FF">module</font></b> Jekyll
+  <b><font color="#0000FF">class</font></b> TweetTag <font color="#990000">&lt;</font> Liquid<font color="#990000">::</font>Tag
+
+    TWITTER_OEMBED_URL <font color="#990000">=</font> <font color="#FF0000">"https://api.twitter.com/1/statuses/oembed.json"</font>
+
+    <b><font color="#0000FF">def</font></b> initialize<font color="#990000">(</font>tag_name<font color="#990000">,</font> text<font color="#990000">,</font> tokens<font color="#990000">)</font>
+      <b><font color="#0000FF">super</font></b>
+      <font color="#009900">@text</font>           <font color="#990000">=</font> text
+      <font color="#009900">@cache_disabled</font> <font color="#990000">=</font> <b><font color="#0000FF">false</font></b>
+      <font color="#009900">@cache_folder</font>   <font color="#990000">=</font> File<font color="#990000">.</font>expand_path <font color="#FF0000">"../.tweet-cache"</font><font color="#990000">,</font> File<font color="#990000">.</font>dirname<font color="#990000">(</font><b><font color="#0000FF">__FILE__</font></b><font color="#990000">)</font>
+      FileUtils<font color="#990000">.</font>mkdir_p <font color="#009900">@cache_folder</font>
+    <b><font color="#0000FF">end</font></b>
+
+    <b><font color="#0000FF">def</font></b> render<font color="#990000">(</font>context<font color="#990000">)</font>
+      args       <font color="#990000">=</font> <font color="#009900">@text</font><font color="#990000">.</font>split<font color="#990000">(</font><font color="#FF6600">/\s+/</font><font color="#990000">).</font>map<font color="#990000">(&amp;:</font>strip<font color="#990000">)</font>
+      api_params <font color="#990000">=</font> <font color="#FF0000">{</font><font color="#FF0000">'url'</font> <font color="#990000">=&gt;</font> args<font color="#990000">.</font>shift<font color="#FF0000">}</font>
+
+      args<font color="#990000">.</font>each <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>arg<font color="#990000">|</font>
+        k<font color="#990000">,</font>v <font color="#990000">=</font> arg<font color="#990000">.</font>split<font color="#990000">(</font><font color="#FF0000">'='</font><font color="#990000">).</font>map<font color="#990000">(&amp;:</font>strip<font color="#990000">)</font>
+        <b><font color="#0000FF">if</font></b> k <font color="#990000">&amp;&amp;</font> v
+          <b><font color="#0000FF">if</font></b> v <font color="#990000">=~</font> <font color="#FF6600">/^'(.*)'$/</font>
+            v <font color="#990000">=</font> <font color="#009900">$1</font>
+          <b><font color="#0000FF">end</font></b>
+          api_params<font color="#990000">[</font>k<font color="#990000">]</font> <font color="#990000">=</font> v
+        <b><font color="#0000FF">end</font></b>
+      <b><font color="#0000FF">end</font></b>
+
+      html_output_for<font color="#990000">(</font>api_params<font color="#990000">)</font>
+    <b><font color="#0000FF">end</font></b>
+
+    <b><font color="#0000FF">def</font></b> html_output_for<font color="#990000">(</font>api_params<font color="#990000">)</font>
+      body <font color="#990000">=</font> <font color="#FF0000">"Tweet could not be processed"</font>
+      <b><font color="#0000FF">if</font></b> response <font color="#990000">=</font> cached_response<font color="#990000">(</font>api_params<font color="#990000">)</font> <font color="#990000">||</font> live_response<font color="#990000">(</font>api_params<font color="#990000">)</font>
+        body <font color="#990000">=</font> response<font color="#990000">[</font><font color="#FF0000">'html'</font><font color="#990000">]</font> <font color="#990000">||</font> response<font color="#990000">[</font><font color="#FF0000">'error'</font><font color="#990000">]</font> <font color="#990000">||</font> body
+      <b><font color="#0000FF">end</font></b>
+      <font color="#FF0000">"&lt;div class='embed tweet'&gt;#{body}&lt;/div&gt;"</font>
+    <b><font color="#0000FF">end</font></b>
+
+    <b><font color="#0000FF">def</font></b> cache<font color="#990000">(</font>api_params<font color="#990000">,</font> data<font color="#990000">)</font>
+      cache_file <font color="#990000">=</font> cache_file_for<font color="#990000">(</font>api_params<font color="#990000">)</font>
+      File<font color="#990000">.</font>open<font color="#990000">(</font>cache_file<font color="#990000">,</font> <font color="#FF0000">"w"</font><font color="#990000">)</font> <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>f<font color="#990000">|</font>
+        f<font color="#990000">.</font>write<font color="#990000">(</font>data<font color="#990000">)</font>
+      <b><font color="#0000FF">end</font></b>
+    <b><font color="#0000FF">end</font></b>
+
+    <b><font color="#0000FF">def</font></b> cached_response<font color="#990000">(</font>api_params<font color="#990000">)</font>
+      <b><font color="#0000FF">return</font></b> <b><font color="#0000FF">nil</font></b> <b><font color="#0000FF">if</font></b> <font color="#009900">@cache_disabled</font>
+      cache_file <font color="#990000">=</font> cache_file_for<font color="#990000">(</font>api_params<font color="#990000">)</font>
+      JSON<font color="#990000">.</font>parse<font color="#990000">(</font>File<font color="#990000">.</font>read<font color="#990000">(</font>cache_file<font color="#990000">))</font> <b><font color="#0000FF">if</font></b> File<font color="#990000">.</font>exist?<font color="#990000">(</font>cache_file<font color="#990000">)</font>
+    <b><font color="#0000FF">end</font></b>
+
+    <b><font color="#0000FF">def</font></b> url_params_for<font color="#990000">(</font>api_params<font color="#990000">)</font>
+      api_params<font color="#990000">.</font>keys<font color="#990000">.</font>sort<font color="#990000">.</font>map <b><font color="#0000FF">do</font></b> <font color="#990000">|</font>k<font color="#990000">|</font>
+        <font color="#FF0000">"#{CGI::escape(k)}=#{CGI::escape(api_params[k])}"</font>
+      <b><font color="#0000FF">end</font></b><font color="#990000">.</font>join<font color="#990000">(</font><font color="#FF0000">'&amp;'</font><font color="#990000">)</font>
+    <b><font color="#0000FF">end</font></b>
+
+    <b><font color="#0000FF">def</font></b> cache_file_for<font color="#990000">(</font>api_params<font color="#990000">)</font>
+      filename <font color="#990000">=</font> <font color="#FF0000">"#{Digest::MD5.hexdigest(url_params_for(api_params))}.cache"</font>
+      File<font color="#990000">.</font>join<font color="#990000">(</font><font color="#009900">@cache_folder</font><font color="#990000">,</font> filename<font color="#990000">)</font>
+    <b><font color="#0000FF">end</font></b>
+
+    <b><font color="#0000FF">def</font></b> live_response<font color="#990000">(</font>api_params<font color="#990000">)</font>
+      api_uri <font color="#990000">=</font> URI<font color="#990000">.</font>parse<font color="#990000">(</font>TWITTER_OEMBED_URL <font color="#990000">+</font> <font color="#FF0000">"?#{url_params_for(api_params)}"</font><font color="#990000">)</font>
+      response <font color="#990000">=</font> Net<font color="#990000">::</font>HTTP<font color="#990000">.</font>get<font color="#990000">(</font>api_uri<font color="#990000">.</font>host<font color="#990000">,</font> api_uri<font color="#990000">.</font>request_uri<font color="#990000">)</font>
+      cache<font color="#990000">(</font>api_params<font color="#990000">,</font> response<font color="#990000">)</font> <b><font color="#0000FF">unless</font></b> <font color="#009900">@cache_disabled</font>
+      JSON<font color="#990000">.</font>parse<font color="#990000">(</font>response<font color="#990000">)</font>
+    <b><font color="#0000FF">end</font></b>
+  <b><font color="#0000FF">end</font></b>
+
+  <b><font color="#0000FF">class</font></b> TweetTagNoCache <font color="#990000">&lt;</font> TweetTag
+    <b><font color="#0000FF">def</font></b> initialize<font color="#990000">(</font>tag_name<font color="#990000">,</font> text<font color="#990000">,</font> token<font color="#990000">)</font>
+      <b><font color="#0000FF">super</font></b>
+      <font color="#009900">@cache_disabled</font> <font color="#990000">=</font> <b><font color="#0000FF">true</font></b>
+    <b><font color="#0000FF">end</font></b>
+  <b><font color="#0000FF">end</font></b>
+<b><font color="#0000FF">end</font></b>
+
+Liquid<font color="#990000">::</font>Template<font color="#990000">.</font>register_tag<font color="#990000">(</font><font color="#FF0000">'tweet'</font><font color="#990000">,</font> Jekyll<font color="#990000">::</font>TweetTag<font color="#990000">)</font>
+Liquid<font color="#990000">::</font>Template<font color="#990000">.</font>register_tag<font color="#990000">(</font><font color="#FF0000">'tweetnocache'</font><font color="#990000">,</font> Jekyll<font color="#990000">::</font>TweetTagNoCache<font color="#990000">)</font>
+</tt></pre>
