@@ -21,13 +21,4 @@ This becomes an issue when someone asks a question that the teacher doesn't know
 
 Another problem they face is with the curriculum. Having the same curriculum every single year really limits teachers in how much they can learn. Same homeworks, same tests, no pushing the limits. 
 
-Also, check this out: 
-
-{%tweet https://twitter.com/SimonBoylan/status/379715567974100993 %}
-
-<!-- <blockquote class="twitter-tweet"><p>People&#39;s reaction to ideas:&#10;Bad ideas: &quot;That&#39;ll never work&quot;&#10;Good ideas: &quot;That could work&quot;&#10;Great ideas: &quot;That&#39;ll never work&quot;</p>&mdash; Aaron Levie (@levie) <a href="https://twitter.com/levie/statuses/378742509322502144">September 14, 2013</a></blockquote>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script> -->
-
-I won't confirm nor deny that this is a test. 
-
 
