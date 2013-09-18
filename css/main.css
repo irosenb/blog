@@ -46,14 +46,16 @@ h1.title a, h1 {
   text-transform: uppercase;
 }
 
-.site {
+/*.site {
   margin: 0 auto;
   width: 50%;
-}
+}*/
 
 ul.posts {
   list-style-type: none;
   margin-bottom: 2em;
+  width: 50%;
+  margin: 0 auto;
   /*text-align: center;*/
 }
 
@@ -177,6 +179,25 @@ ul.posts span {
 /*****************************************************************************/
 
 /* standard */
+
+
+
+p {
+  text-align: center;
+  width: 50%;
+  /*margin: 0 auto;*/
+}
+
+header {
+  width: 50%;
+  margin: 0 auto;
+}
+
+time {
+  text-align: left;
+  display: block;
+}
+
 .post pre {
   border: 1px solid #ddd;
   background-color: #eef;
