@@ -12,7 +12,11 @@ We live in a huge world. In some ways, it's kind of mind boggling how we now hav
 
 It's kind of insane.
 
-![the world](../images/looking_upon_the_world.png "Look at this world")
+<div class="pic">
+    {% picture [default] looking_upon_the_world.png %}
+</div>
+
+<!-- ![the world](../images/looking_upon_the_world.png "Look at this world") -->
 
 And it's really easy to get intimidated by it. Looking at the overall scale can be easily overwhelming, making people feel lost.
 
@@ -30,7 +34,7 @@ Once you realize that building your life is just assembling many different brick
 
 But it isn't about getting big or famous. It's about architecting your life. Taking control of it. Steering the wheel yourself, instead being steered by outside influences. 
 
-You might run into trouble along the way. You might feel hopeless.Lose perspective on how far you've come.
+You might run into trouble along the way. You might feel hopeless. Lose perspective on how far you've come.
 
 But despite the struggles, it will be *your* story. *Your* struggles, *your* triumphs. 
 

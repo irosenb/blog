@@ -2,3 +2,14 @@ name: Isaac Rosenberg
 markdown: redcarpet
 pygments: true
 permalink: :title
+
+picture: 
+  source: images
+  markup: "picture"
+  presets:
+    default:
+      attr:
+        class: "post-img"
+        itemprop: "image"
+      source_default:
+        width: "500"
