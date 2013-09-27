@@ -201,6 +201,12 @@ time {
   margin-bottom: 1.5em;
 }
 
+a:link, a:visited {
+  color: #d17677;
+  font-weight: normal;
+  text-decoration: underline;
+}
+
 .post pre {
   border: 1px solid #ddd;
   background-color: #eef;
