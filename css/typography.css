@@ -10,6 +10,11 @@ body {
   color: rgb(10, 10, 10);
 } 
 
+a {outline:none !important; font-weight:bold; text-decoration:none;}
+a:link, a:visited {color:#303030;}
+a:hover {color:#575757;}
+a:active {color:#7e7e7e; outline:none;}
+
 h1 {
   font-size: 3em;
   line-height: 1.35;
@@ -69,6 +74,10 @@ p.lead + p {
 }
 
 blockquote {border-left:5px solid #eee; padding-left:1.5em; margin:1em 0;}
+p > blockquote {
+  width: 100%;
+}
+
 blockquote small {display:block; line-height:1.7em;}
 ul, ol, dl {
   text-align: left;
@@ -91,7 +100,7 @@ hr {
     border-top: medium double #333;
     color: #333;
     text-align: center;
-    width: 50%;
+    width: 25%;
 }
 hr:after {
     content: "§";
