@@ -73,9 +73,16 @@ p.lead + p {
 
 }
 
-blockquote {border-left:5px solid #eee; padding-left:1.5em; margin:1em 0;}
-p > blockquote {
+blockquote {
+  border-left:5px solid #eee;
+  padding-left:1.5em; 
+  margin: 0 auto;
+  width: 50%;
+}
+
+blockquote p {
   width: 100%;
+
 }
 
 blockquote small {display:block; line-height:1.7em;}
