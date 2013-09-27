@@ -16,8 +16,6 @@ It's kind of insane.
     {% picture [default] looking_upon_the_world.png %}
 </div>
 
-<!-- ![the world](../images/looking_upon_the_world.png "Look at this world") -->
-
 And it's really easy to get intimidated by it. Looking at the overall scale can be easily overwhelming, making people feel lost.
 
 ![Ahhhhh!](../images/freaking_out.png "Freaking out")

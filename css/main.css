@@ -46,11 +46,6 @@ h1.title a, h1 {
   text-transform: uppercase;
 }
 
-/*.site {
-  margin: 0 auto;
-  width: 50%;
-}*/
-
 ul.posts {
   list-style-type: none;
   margin-bottom: 2em;
@@ -232,10 +227,12 @@ time {
 }
 
 .post img {
-  width: 80%;
+  width: 70%;
   height: auto;
   display: block;
   margin: 0 auto;
+  border-style: solid;
+  border-color: #ccc;
 }
 
 .caret {
