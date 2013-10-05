@@ -12,9 +12,7 @@ We live in a huge world. In some ways, it's kind of mind boggling how we now hav
 
 It's kind of insane.
 
-<div class="pic">
-    {% picture [default] looking_upon_the_world.png %}
-</div>
+![Looking upon the world](../images/  looking_upon_the_world.png "Looking Upon the World")
 
 And it's really easy to get intimidated by it. Looking at the overall scale can be easily overwhelming, making people feel lost.
 
