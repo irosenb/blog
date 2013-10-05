@@ -272,6 +272,12 @@ time {
   background-color: #333;
 }
 
+@media (max-width: 981px) {
+  p, header, ul, ol {
+    width: 70%;
+  }
+}
+
 @media (max-width: 672px) {
   .header h1 {
     font-size: 2.13333rem;
