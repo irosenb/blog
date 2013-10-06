@@ -26,6 +26,8 @@ server_port     = "4000"      # port for preview server eg. localhost:4000
 # Working with Jekyll #
 #######################
 
+GITHUB_REPONAME = "irosenb/irosenb.github.io"
+
 # usage rake new_post[my-new-post] or rake new_post['my new post'] or rake new_post (defaults to "new-post")
 desc "Begin a new post in #{posts_dir}"
 task :new_post, :title do |t, args|
@@ -103,16 +105,14 @@ end
 desc "Generate and publish blog to gh-pages"
 task :publish => [:generate] do
   Dir.mktmpdir do |tmp|
-    system "mv _site/* #{tmp}"
-    system "git checkout -b gh-pages"
-    system "rm -rf *"
-    system "mv #{tmp}/* ."
-    message = "Site updated at #{Time.now.utc}"
+    cp_r "_site/.", tmp
+    Dir.chdir tmp
+    system "git init"
     system "git add ."
-    system "git commit -am #{message.shellescape}"
-    system "git push origin gh-pages --force"
-    system "git checkout master"
-    system "echo yolo"
+    message = "Site updated at #{Time.now.utc}"
+    system "git commit -m #{message.inspect}"
+    system "git remote add origin git@github.com:#{GITHUB_REPONAME}.git"
+    system "git push origin master:refs/heads/gh-pages --force"
   end
 end
 
