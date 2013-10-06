@@ -2,6 +2,8 @@ name: Isaac Rosenberg
 markdown: redcarpet
 pygments: true
 permalink: :title
+exclude: ['Gemfile', 'Gemfile.lock', 'Rakefile', 'README.md']
+
 
 picture: 
   source: images
