@@ -1,21 +1,13 @@
 require "rubygems"
 require "bundler/setup"
 require "stringex"
+require 'rake'
+require 'rdoc'
+require 'date'
+require 'yaml'
+require 'tmpdir'
+require 'jekyll'
 
-# require "helpers"
-# include Helpers
-
-## -- Rsync Deploy config -- ##
-# Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
-ssh_user       = "user@domain.com"
-ssh_port       = "22"
-document_root  = "~/website.com/"
-rsync_delete   = false
-rsync_args     = ""  # Any extra arguments to pass to rsync
-deploy_default = "push"
-
-# This will be configured for you when you run config_deploy
-deploy_branch  = "master"
 
 ## -- Misc Configs -- ##
 
@@ -99,213 +91,29 @@ task :new_page, :filename do |t, args|
   end
 end
 
-# usage rake isolate[my-post]
-desc "Move all other posts than the one currently being worked on to a temporary stash location (stash) so regenerating the site happens much more quickly."
-task :isolate, :filename do |t, args|
-  stash_dir = "#{source_dir}/#{stash_dir}"
-  FileUtils.mkdir(stash_dir) unless File.exist?(stash_dir)
-  Dir.glob("#{source_dir}/#{posts_dir}/*.*") do |post|
-    FileUtils.mv post, stash_dir unless post.include?(args.filename)
-  end
+desc "Generate blog files"
+task :generate do
+  Jekyll::Site.new(Jekyll.configuration({
+    "source"      => ".",
+    "destination" => "_site"
+  })).process
 end
 
-desc "Move all stashed posts back into the posts directory, ready for site generation."
-task :integrate do
-  FileUtils.mv Dir.glob("#{source_dir}/#{stash_dir}/*.*"), "#{source_dir}/#{posts_dir}/"
-end
 
-desc "Clean out caches: .pygments-cache, .gist-cache, .sass-cache"
-task :clean do
-  rm_rf [".pygments-cache/**", ".gist-cache/**", ".sass-cache/**", "source/stylesheets/screen.css"]
-end
-
-desc "Move sass to sass.old, install sass theme updates, replace sass/custom with sass.old/custom"
-task :update_style, :theme do |t, args|
-  theme = args.theme || 'classic'
-  if File.directory?("sass.old")
-    puts "removed existing sass.old directory"
-    rm_r "sass.old", :secure=>true
-  end
-  mv "sass", "sass.old"
-  puts "## Moved styles into sass.old/"
-  cp_r "#{themes_dir}/"+theme+"/sass/", "sass"
-  cp_r "sass.old/custom/.", "sass/custom"
-  puts "## Updated Sass ##"
-end
-
-desc "Move source to source.old, install source theme updates, replace source/_includes/navigation.html with source.old's navigation"
-task :update_source, :theme do |t, args|
-  theme = args.theme || 'classic'
-  if File.directory?("#{source_dir}.old")
-    puts "## Removed existing #{source_dir}.old directory"
-    rm_r "#{source_dir}.old", :secure=>true
-  end
-  mkdir "#{source_dir}.old"
-  cp_r "#{source_dir}/.", "#{source_dir}.old"
-  puts "## Copied #{source_dir} into #{source_dir}.old/"
-  cp_r "#{themes_dir}/"+theme+"/source/.", source_dir, :remove_destination=>true
-  cp_r "#{source_dir}.old/_includes/custom/.", "#{source_dir}/_includes/custom/", :remove_destination=>true
-  cp "#{source_dir}.old/favicon.png", source_dir
-  mv "#{source_dir}/index.html", "#{blog_index_dir}", :force=>true if blog_index_dir != source_dir
-  cp "#{source_dir}.old/index.html", source_dir if blog_index_dir != source_dir && File.exists?("#{source_dir}.old/index.html")
-  puts "## Updated #{source_dir} ##"
-end
-
-##############
-# Deploying  #
-##############
-
-desc "Default deploy task"
-task :deploy do
-  # Check if preview posts exist, which should not be published
-  if File.exists?(".preview-mode")
-    puts "## Found posts in preview mode, regenerating files ..."
-    File.delete(".preview-mode")
-    Rake::Task[:generate].execute
-  end
-
-  Rake::Task[:copydot].invoke(source_dir, public_dir)
-  Rake::Task["#{deploy_default}"].execute
-end
-
-desc "Generate website and deploy"
-task :gen_deploy => [:integrate, :generate, :deploy] do
-end
-
-desc "copy dot files for deployment"
-task :copydot, :source, :dest do |t, args|
-  FileList["#{args.source}/**/.*"].exclude("**/.", "**/..", "**/.DS_Store", "**/._*").each do |file|
-    cp_r file, file.gsub(/#{args.source}/, "#{args.dest}") unless File.directory?(file)
-  end
-end
-
-desc "Deploy website via rsync"
-task :rsync do
-  exclude = ""
-  if File.exists?('./rsync-exclude')
-    exclude = "--exclude-from '#{File.expand_path('./rsync-exclude')}'"
-  end
-  puts "## Deploying website via Rsync"
-  ok_failed system("rsync -avze 'ssh -p #{ssh_port}' #{exclude} #{rsync_args} #{"--delete" unless rsync_delete == false} #{public_dir}/ #{ssh_user}:#{document_root}")
-end
-
-desc "deploy public directory to github pages"
-multitask :push do
-  puts "## Deploying branch to Github Pages "
-  puts "## Pulling any updates from Github Pages "
-  cd "#{deploy_dir}" do 
-    system "git pull"
-  end
-  (Dir["#{deploy_dir}/*"]).each { |f| rm_rf(f) }
-  Rake::Task[:copydot].invoke(public_dir, deploy_dir)
-  puts "\n## Copying #{public_dir} to #{deploy_dir}"
-  cp_r "#{public_dir}/.", deploy_dir
-  cd "#{deploy_dir}" do
-    system "git add -A"
-    puts "\n## Commiting: Site updated at #{Time.now.utc}"
+desc "Generate and publish blog to gh-pages"
+task :publish => [:generate] do
+  Dir.mktmpdir do |tmp|
+    system "mv _site/* #{tmp}"
+    system "git checkout -b gh-pages"
+    system "rm -rf *"
+    system "mv #{tmp}/* ."
     message = "Site updated at #{Time.now.utc}"
-    system "git commit -m \"#{message}\""
-    puts "\n## Pushing generated #{deploy_dir} website"
-    system "git push origin #{deploy_branch}"
-    puts "\n## Github Pages deploy complete"
-  end
-end
-
-desc "Update configurations to support publishing to root or sub directory"
-task :set_root_dir, :dir do |t, args|
-  puts ">>> !! Please provide a directory, eg. rake config_dir[publishing/subdirectory]" unless args.dir
-  if args.dir
-    if args.dir == "/"
-      dir = ""
-    else
-      dir = "/" + args.dir.sub(/(\/*)(.+)/, "\\2").sub(/\/$/, '');
-    end
-    rakefile = IO.read(__FILE__)
-    rakefile.sub!(/public_dir(\s*)=(\s*)(["'])[\w\-\/]*["']/, "public_dir\\1=\\2\\3public#{dir}\\3")
-    File.open(__FILE__, 'w') do |f|
-      f.write rakefile
-    end
-    compass_config = IO.read('config.rb')
-    compass_config.sub!(/http_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_path\\1=\\2\\3#{dir}/\\3")
-    compass_config.sub!(/http_images_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_images_path\\1=\\2\\3#{dir}/images\\3")
-    compass_config.sub!(/http_fonts_path(\s*)=(\s*)(["'])[\w\-\/]*["']/, "http_fonts_path\\1=\\2\\3#{dir}/fonts\\3")
-    compass_config.sub!(/css_dir(\s*)=(\s*)(["'])[\w\-\/]*["']/, "css_dir\\1=\\2\\3public#{dir}/stylesheets\\3")
-    File.open('config.rb', 'w') do |f|
-      f.write compass_config
-    end
-    jekyll_config = IO.read('_config.yml')
-    jekyll_config.sub!(/^destination:.+$/, "destination: public#{dir}")
-    jekyll_config.sub!(/^subscribe_rss:\s*\/.+$/, "subscribe_rss: #{dir}/atom.xml")
-    jekyll_config.sub!(/^root:.*$/, "root: /#{dir.sub(/^\//, '')}")
-    File.open('_config.yml', 'w') do |f|
-      f.write jekyll_config
-    end
-    rm_rf public_dir
-    mkdir_p "#{public_dir}#{dir}"
-    puts "## Site's root directory is now '/#{dir.sub(/^\//, '')}' ##"
-  end
-end
-
-desc "Set up _deploy folder and deploy branch for Github Pages deployment"
-task :setup_github_pages, :repo do |t, args|
-  if args.repo
-    repo_url = args.repo
-  else
-    puts "Enter the read/write url for your repository"
-    puts "(For example, 'git@github.com:your_username/your_username.github.io)"
-    puts "           or 'https://github.com/your_username/your_username.github.io')"
-    repo_url = get_stdin("Repository url: ")
-  end
-  protocol = (repo_url.match(/(^git)@/).nil?) ? 'https' : 'git'
-  if protocol == 'git'
-    user = repo_url.match(/:([^\/]+)/)[1]
-  else
-    user = repo_url.match(/github\.com\/([^\/]+)/)[1]
-  end
-  branch = (repo_url.match(/\/[\w-]+\.github\.(?:io|com)/).nil?) ? 'gh-pages' : 'master'
-  project = (branch == 'gh-pages') ? repo_url.match(/\/([^\.]+)/)[1] : ''
-  unless (`git remote -v` =~ /origin.+?octopress(?:\.git)?/).nil?
-    # If octopress is still the origin remote (from cloning) rename it to octopress
-    system "git remote rename origin octopress"
-    if branch == 'master'
-      # If this is a user/organization pages repository, add the correct origin remote
-      # and checkout the source branch for committing changes to the blog source.
-      system "git remote add origin #{repo_url}"
-      puts "Added remote #{repo_url} as origin"
-      system "git config branch.master.remote origin"
-      puts "Set origin as default remote"
-      system "git branch -m master source"
-      puts "Master branch renamed to 'source' for committing your blog source files"
-    else
-      unless !public_dir.match("#{project}").nil?
-        system "rake set_root_dir[#{project}]"
-      end
-    end
-  end
-  url = "http://#{user}.github.io"
-  url += "/#{project}" unless project == ''
-  jekyll_config = IO.read('_config.yml')
-  jekyll_config.sub!(/^url:.*$/, "url: #{url}")
-  File.open('_config.yml', 'w') do |f|
-    f.write jekyll_config
-  end
-  rm_rf deploy_dir
-  mkdir deploy_dir
-  cd "#{deploy_dir}" do
-    system "git init"
-    system "echo 'My Octopress Page is coming soon &hellip;' > index.html"
     system "git add ."
-    system "git commit -m \"Octopress init\""
-    system "git branch -m gh-pages" unless branch == 'master'
-    system "git remote add origin #{repo_url}"
-    rakefile = IO.read(__FILE__)
-    rakefile.sub!(/deploy_branch(\s*)=(\s*)(["'])[\w-]*["']/, "deploy_branch\\1=\\2\\3#{branch}\\3")
-    rakefile.sub!(/deploy_default(\s*)=(\s*)(["'])[\w-]*["']/, "deploy_default\\1=\\2\\3push\\3")
-    File.open(__FILE__, 'w') do |f|
-      f.write rakefile
-    end
+    system "git commit -am #{message.shellescape}"
+    system "git push origin gh-pages --force"
+    system "git checkout master"
+    system "echo yolo"
   end
-  puts "\n---\n## Now you can deploy to #{url} with `rake deploy` ##"
 end
 
 def ok_failed(condition)
