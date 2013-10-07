@@ -302,7 +302,7 @@ time {
     font-size: 2rem;
   }
 
-  p, header, ul, ol {
+  p, header, ul, ol, hr {
     width: 80%;
     font-size: .88em;
   }
