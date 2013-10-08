@@ -260,6 +260,12 @@ time {
   font-weight: 400;
 }
 
+div.header .title:hover {
+  -webkit-animation: moveUp 2s;
+  -o-animation: moveUp 2s;
+  animation: moveUp 2s;
+}
+
 
 /* terminal */
 .post pre.terminal {
@@ -311,4 +317,12 @@ time {
     line-height: 1.25em;
     font-size: 1.3em;
   }
+}
+
+@-webkit-keyframes moveUp {
+  /*0%   {}*/
+  /*25%  {font-size: 1em;}
+  75%  {font-size: .8em;}*/
+  100% {font-size: 2rem;}
+  
 }
