@@ -190,7 +190,7 @@ article img {
   
 }
 
-header {
+.post-header {
   width: 50%;
   margin: 0 auto;
 }
@@ -272,7 +272,7 @@ time {
 }
 
 @media (max-width: 981px) {
-  p, header, ul, ol {
+  p, .post-header, ul, ol {
     width: 70%;
   }
 }
@@ -282,7 +282,7 @@ time {
     font-size: 2.13333rem;
   }
 
-  p, header, ul, ol {
+  p, .post-header, ul, ol {
     width: 80%;
   }
 
@@ -301,7 +301,7 @@ time {
     font-size: 2rem;
   }
 
-  p, header, ul, ol, hr {
+  p, .post-header, ul, ol, hr {
     width: 80%;
     font-size: .88em;
   }
