@@ -24,14 +24,14 @@
 
 </head>
 <body {% if page.categories != nil %} class="{{ page.categories }}" {% endif %}>
-        
-        <header class="header">
-            <h1 class="title"><a class="title" href="/" rel="author">{{ site.name }}</a></h1>
-        </header>
+    
+    <header class="header">
+        <h1 class="title"><a class="title" href="/" rel="author">{{ site.name }}</a></h1>
+    </header>
 
-        <div class="site">
-            {{ content }}
-        </div>
+    <div class="site">
+        {{ content }}
+    </div>
     {% include analytics.html %}
 </body>
 </html>

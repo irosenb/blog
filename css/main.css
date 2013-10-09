@@ -190,7 +190,7 @@ article img {
   
 }
 
-.post-header {
+.post-header, .highlight {
   width: 50%;
   margin: 0 auto;
 }
@@ -272,7 +272,7 @@ time {
 }
 
 @media (max-width: 981px) {
-  p, .post-header, ul, ol {
+  p, .post-header, ul, ol, .highlight {
     width: 70%;
   }
 }
@@ -282,7 +282,7 @@ time {
     font-size: 2.13333rem;
   }
 
-  p, .post-header, ul, ol {
+  p, .post-header, ul, ol, .highlight {
     width: 80%;
   }
 
@@ -301,7 +301,7 @@ time {
     font-size: 2rem;
   }
 
-  p, .post-header, ul, ol, hr {
+  p, .post-header, ul, ol, hr, .highlight {
     width: 80%;
     font-size: .88em;
   }

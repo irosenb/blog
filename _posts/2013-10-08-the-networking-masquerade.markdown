@@ -5,7 +5,7 @@ date: 2013-10-08 01:16
 categories: 
 ---
 
-I love the term "networking". It's a great way to masquerade simple human interactions. People view it as something that "professionals" do, or something that is limited to "adults". Terms like "leads", "referrals", and "career" all belong under this "networking" umbrella, or this masquerade of humanity. 
+I love the term "networking". It's a great way to masquerade simple human interactions. People view it as something that professionals do, or something that is limited to adults. Terms like leads, referrals, and career all belong under this "networking" umbrella, or this masquerade of humanity. 
 
 I wonder how people would react if we changed all these words to more human words. Instead of networking, we'd say meeting people. Leads would be friends. Your network would be simply your friends. 
 
