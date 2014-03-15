@@ -15,6 +15,4 @@ By the time we will have reached 100% literacy, the industrial models of the 180
 
 That's exciting. 
 
----
-
 
