@@ -8,6 +8,7 @@
 * {
   margin: 0;
   padding: 0;
+  -webkit-hyphens: none;
 }
 
 html, body { height: 100%; }
@@ -98,7 +99,7 @@ ul.posts span {
 /*****************************************************************************/
 
 .site {
-  font-size: 115%;
+  font-size: 1.15em;
   /*text-align: justify;*/
   /*width: 42em;*/
   margin: 3em auto 2em;
@@ -226,6 +227,7 @@ time {
   border: 1px solid #ddd;
   background-color: #eef;
   padding: 0 .2em;
+  white-space: pre-wrap;
 }
 
 .post pre code {
@@ -254,10 +256,6 @@ time {
   opacity: 0.3;
   vertical-align: top;
   width: 0;
-}
-
-.post-title {
-  font-weight: 400;
 }
 
 /* terminal */
@@ -298,7 +296,7 @@ time {
   }
 
   .post-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   p, .post-header, ul, ol, hr, .highlight {
