@@ -74,7 +74,7 @@ p.lead + p {
 }
 
 blockquote {
-  border-left: 10px solid #48484e;
+  border-left: 10px solid #929292;
   padding-left: 1.5em; 
   margin: 0 auto;
   width: 50%;
@@ -90,6 +90,7 @@ blockquote {
 blockquote p {
   width: 100%;
   font-style: italic;
+  color: #929292;
 }
 
 blockquote small {display:block; line-height:1.7em;}
