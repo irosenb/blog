@@ -27,4 +27,8 @@ It shows up all over Twitter. Friends talk about it on Facebook.
 
 Even after I deleted the News app, and stopped looking at the news for some time, I started looking again. All of it still goes on whether I look at it or not, and I feel an obligation to keep watching while it all goes down.  
 
+--- 
+
+Thanks for reading. These are some thoughts I've had but haven't spent time to flesh out :) 
+
 
